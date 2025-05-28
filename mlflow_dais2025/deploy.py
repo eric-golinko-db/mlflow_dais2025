@@ -3,7 +3,7 @@
 
 # COMMAND ----------
 
-print("Hello")
+print("Hello and test")
 
 # COMMAND ----------
 
