@@ -38,8 +38,7 @@ jobs:
       - name: Set Environment Variables Conditionally
         run: |
           echo "Selected TARGET_ENV: $TARGET_ENV"
-          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV        
-          fi
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
         shell: bash
 
       - name: Bundle
