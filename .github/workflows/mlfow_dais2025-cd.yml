@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'test'
+      - 'staging'
       - 'main'
     paths:
       - 'mlflow_dais2025/**'
@@ -23,17 +24,6 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@v0.221.0
-
-      - name: Determine TARGET_ENV
-        id: set_target_env
-        run: |
-          echo "Branch name: $BRANCH_NAME"
-          if [ "$BRANCH_NAME" = "main" ]; then
-            echo "TARGET_ENV=staging" >> $GITHUB_ENV
-          else
-            echo "TARGET_ENV=$BRANCH_NAME" >> $GITHUB_ENV
-          fi
-        shell: bash
 
       - name: Set Environment Variables Conditionally
         run: |
