@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'test'
+      - 'staging'
       - 'main'
     paths:
       - 'mlflow_dais2025/**'
@@ -24,12 +25,13 @@ jobs:
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@v0.221.0
 
+     
       - name: Determine TARGET_ENV
         id: set_target_env
         run: |
           echo "Branch name: $BRANCH_NAME"
           if [ "$BRANCH_NAME" = "main" ]; then
-            echo "TARGET_ENV=staging" >> $GITHUB_ENV
+            echo "TARGET_ENV=prod" >> $GITHUB_ENV
           else
             echo "TARGET_ENV=$BRANCH_NAME" >> $GITHUB_ENV
           fi
@@ -38,9 +40,20 @@ jobs:
       - name: Set Environment Variables Conditionally
         run: |
           echo "Selected TARGET_ENV: $TARGET_ENV"
-          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV        
+
+          if [ "$TARGET_ENV" = "dev" ]; then
+            echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+          elif [ "$TARGET_ENV" = "qa" ]; then
+            echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+          elif [ "$TARGET_ENV" = "staging" ]; then
+            echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+          elif [ "$TARGET_ENV" = "prod" ]; then
+            echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+          else
+            echo "Error: Unknown TARGET_ENV value: $TARGET_ENV"
+            exit 1
           fi
-        shell: bash
+        shell: bash  
 
       - name: Bundle
         run: |
