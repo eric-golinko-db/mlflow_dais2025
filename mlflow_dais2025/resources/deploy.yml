@@ -1,7 +1,7 @@
 resources:
   jobs:
     deploy:
-      name: "${bundle.environment}deploy_assistant"
+      name: "${bundle.environment}_deploy_assistant"
       tasks:
         - task_key: deploy
           notebook_task:
