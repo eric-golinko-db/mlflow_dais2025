@@ -16,6 +16,32 @@ include:
 
 # Deployment Target specific values for workspace
 targets:
+  test:
+    presets:
+      name_prefix: ""
+      pipelines_development: true 
+    default: true
+    workspace: 
+      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+    permissions:
+        - user_name: eric.golinko@databricks.com
+          level: CAN_MANAGE
+    variables:
+        target_env: "test"
+
+  qa:
+    presets:
+      name_prefix: ""
+      pipelines_development: true 
+    default: true
+    workspace: 
+      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+    permissions:
+        - user_name: eric.golinko@databricks.com
+          level: CAN_MANAGE
+    variables:
+        target_env: "qa"
+
   staging:
     presets:
       name_prefix: ""
@@ -28,3 +54,16 @@ targets:
           level: CAN_MANAGE
     variables:
         target_env: "staging"
+    
+  prod:
+    presets:
+      name_prefix: ""
+      pipelines_development: true 
+    default: true
+    workspace: 
+      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+    permissions:
+        - user_name: eric.golinko@databricks.com
+          level: CAN_MANAGE
+    variables:
+        target_env: "prod"
