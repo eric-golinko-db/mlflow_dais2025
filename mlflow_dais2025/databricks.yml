@@ -16,15 +16,15 @@ include:
 
 # Deployment Target specific values for workspace
 targets:
-  qa:
+  staging:
     presets:
       name_prefix: ""
       pipelines_development: true 
     default: true
-    workspace: "https://e2-dogfood.staging.cloud.databricks.com/"
-      host: 
+    workspace: 
+      host: "https://e2-dogfood.staging.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
     variables:
-        target_env: "qa"
+        target_env: "staging"

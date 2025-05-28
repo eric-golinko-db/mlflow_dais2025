@@ -1,0 +1,49 @@
+name: mlflow_dais2025 Bundle Deployment
+
+on:
+  push:
+    branches:
+      - 'test'
+      - 'main'
+    paths:
+      - 'mlflow_dais2025/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-bundle:
+    runs-on: ubuntu-latest
+    # Remove TARGET_ENV from here to avoid syntax issues
+    # We'll set it in a separate step
+    env:
+      BRANCH_NAME: ${{ github.ref_name }}  # Capture the branch name
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@v0.221.0
+
+      - name: Determine TARGET_ENV
+        id: set_target_env
+        run: |
+          echo "Branch name: $BRANCH_NAME"
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "TARGET_ENV=staging" >> $GITHUB_ENV
+          else
+            echo "TARGET_ENV=$BRANCH_NAME" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Set Environment Variables Conditionally
+        run: |
+          echo "Selected TARGET_ENV: $TARGET_ENV"
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV        
+          fi
+        shell: bash
+
+      - name: Bundle
+        run: |
+          echo "Validating environment: $TARGET_ENV"
+          databricks bundle validate -t "$TARGET_ENV"
+        working-directory: ./mlflow_dais2025

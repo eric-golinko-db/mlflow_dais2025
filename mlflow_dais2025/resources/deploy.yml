@@ -1,0 +1,14 @@
+resources:
+  jobs:
+    deploy:
+      name: "${bundle.environment}deploy_assistant"
+      tasks:
+        - task_key: deploy
+          notebook_task:
+            notebook_path: ./deploy.py
+            source: WORKSPACE
+      queue:
+        enabled: true
+      parameters:
+        - name: catalog
+          default: eric_golinko
