@@ -43,7 +43,9 @@ jobs:
 
           if [ "$TARGET_ENV" = "dev" ]; then
             echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
-          elif [ "$TARGET_ENV" = "qa" ]; then
+          elif [ "$TARGET_ENV" = "test" ]; then
+            echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
+           elif [ "$TARGET_ENV" = "qa" ]; then
             echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
           elif [ "$TARGET_ENV" = "staging" ]; then
             echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_TOKEN }}" >> $GITHUB_ENV
