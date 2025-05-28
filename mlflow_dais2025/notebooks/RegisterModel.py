@@ -39,8 +39,8 @@ with mlflow.start_run(run_name=f"log_mlflow_dais2025"):
         python_model=os.path.join(
             os.getcwd(), model_path
         ),  # Chain code file e.g., /path/to/the/chain.py
-        model_config=os.path.join(os.getcwd(), "config.yaml"),  # Chain configuration
-        name="chain",  # Required by MLflow
+        model_config=os.path.join(os.getcwd(), "../config.yaml"),  # Chain configuration
+        artifact_path="chain",  # Required by MLflow
         input_example=config.get(
             "input_example"
         ),  # Save the chain's input schema.  MLflow will execute the chain before logging & capture it's output schema.
