@@ -6,7 +6,7 @@
 
 import mlflow
 
-config = mlflow.models.ModelConfig(development_config="config.yaml")
+config = mlflow.models.ModelConfig(development_config="../config.yaml")
 
 CATALOG = config.get("catalog")
 SCHEMA = config.get("schema")

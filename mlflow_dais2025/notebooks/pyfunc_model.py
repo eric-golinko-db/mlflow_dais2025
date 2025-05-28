@@ -32,7 +32,7 @@ class LLMChain(ChatModel):
     """
 
     def __init__(self):
-        self.config = mlflow.models.ModelConfig(development_config="config.yaml")
+        self.config = mlflow.models.ModelConfig(development_config="../config.yaml")
             
     @property
     def openai_client(self):
@@ -271,19 +271,19 @@ mlflow.models.set_model(model=LLMChain())
 
 # COMMAND ----------
 
-lm = LLMChain()
+# lm = LLMChain()
 
 # COMMAND ----------
 
-r = lm.predict(
-    context=None,
-    messages=[
-        {
-            "role": "user",
-            "content": "How many years has Databricks been a company?",
-        }
-    ],
-)
+# r = lm.predict(
+#     context=None,
+#     messages=[
+#         {
+#             "role": "user",
+#             "content": "How many years has Databricks been a company?",
+#         }
+#     ],
+# )
 
 # COMMAND ----------
 
