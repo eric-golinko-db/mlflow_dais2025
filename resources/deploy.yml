@@ -1,0 +1,26 @@
+resources:
+  jobs:
+    msl_deploy:
+      name: "${bundle.environment}_msl_deploy_assistant"
+      tasks:
+        - task_key: register_model
+          notebook_task:
+            notebook_path: ../DeployModel/00_RegisterModel.py
+            source: WORKSPACE
+        - task_key: deploy_model
+          depends_on:
+            - task_key: register_model
+          notebook_task:
+            notebook_path: ../DeployModel/01_DeployModel.py
+            source: WORKSPACE
+      queue:
+        enabled: true
+      parameters:
+        - name: catalog
+          default: comm_assist_llm_${var.target_env}_sc
+        - name: secret_scope
+          default: ${var.secret_cicd_scope}
+        - name: sp_client_id_key
+          default: ${var.sp_client_id_key}
+        - name: sp_client_secret_key
+          default: ${var.sp_client_secret_key}

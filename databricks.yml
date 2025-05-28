@@ -1,0 +1,30 @@
+# The name of the bundle. run `databricks bundle schema` to see the full bundle settings schema.
+bundle:
+  name: mlflow_dais2025
+
+
+variables:
+  target_env:
+    description: env deploying to.
+    default: dev
+  
+include:
+  # Resources folder contains ML artifact resources for the ML project that defines model and experiment
+  # And workflows resources for the ML project including model training -> validation -> deployment,
+  # batch inference, quality monitoring, metric refresh, alerts and triggering retrainingd
+  - ./resources/deploy.yml
+
+# Deployment Target specific values for workspace
+targets:
+  qa:
+    presets:
+      name_prefix: ""
+      pipelines_development: true 
+    default: true
+    workspace: "https://e2-dogfood.staging.cloud.databricks.com/"
+      host: 
+    permissions:
+        - user_name: eric.golinko@databricks.com
+          level: CAN_MANAGE
+    variables:
+        target_env: "qa"
