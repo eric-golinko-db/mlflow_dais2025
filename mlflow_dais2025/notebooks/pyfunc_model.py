@@ -234,7 +234,6 @@ class LLMChain(ChatModel):
     @mlflow.trace(name="pyfunc.predict", span_type="CHAIN")
     def predict(
         self,
-        context: mlflow.pyfunc.model.PythonModelContext,
         messages: List[Dict[str, str]],
         params: Optional[Dict[str, Any]] = None,
     ) -> ChatCompletionResponse:
