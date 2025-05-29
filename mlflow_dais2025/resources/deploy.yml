@@ -3,9 +3,15 @@ resources:
     deploy:
       name: "${bundle.environment}_deploy_assistant"
       tasks:
-        - task_key: deploy
+        - task_key: register_model
           notebook_task:
-            notebook_path: ../deploy.py
+            notebook_path: ../notebooks/RegisterModel.py
+            source: WORKSPACE
+        - task_key: deploy_model
+          depends_on:
+            - task_key: register_model
+          notebook_task:
+            notebook_path: ../notebooks/Deploy.py
             source: WORKSPACE
       queue:
         enabled: true

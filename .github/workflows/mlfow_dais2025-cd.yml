@@ -12,7 +12,10 @@ on:
 
 jobs:
   deploy-bundle:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: ubuntu-runners
+      labels: ubuntu-20.04-16core
+    
     # Remove TARGET_ENV from here to avoid syntax issues
     # We'll set it in a separate step
     env:
