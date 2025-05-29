@@ -47,10 +47,10 @@ with mlflow.start_run(run_name=f"log_mlflow_dais2025"):
         registered_model_name=f"{CATALOG}.{SCHEMA}.{MODEL_NAME}",
         resources=resources,
         pip_requirements=[
-            "databricks-agents==0.21.2",
-            "mlflow==" + mlflow.__version__,
+            "databricks-agents",
+            "mlflow",
             "openai>=1.35.3",
-            "databricks-sdk==0.52.0",
+            "databricks-sdk",
         ],
     )
 
