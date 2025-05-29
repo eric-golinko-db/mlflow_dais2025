@@ -15,8 +15,6 @@ jobs:
     runs-on:
       group: ubuntu-runners
       labels: ubuntu-20.04-16core
-    steps:
-      - uses: actions/checkout@v4
     
     # Remove TARGET_ENV from here to avoid syntax issues
     # We'll set it in a separate step
