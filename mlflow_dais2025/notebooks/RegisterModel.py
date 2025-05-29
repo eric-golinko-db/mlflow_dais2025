@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install --upgrade mlflow --pre databricks-agents==0.21.2 databricks-sdk==0.52.0  openai>=1.3.5
+# MAGIC %pip install databricks-agents databricks-sdk openai>=1.3.5 mlflow --upgrade --pre
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
