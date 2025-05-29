@@ -36,8 +36,18 @@ eval_results.result_df
 
 # COMMAND ----------
 
+evals = []
 
+@scorer
+def check_guidelines(inputs, outputs=None, expectations=None, traces=None):
+  pred_agent = LLMChain()
+  return pred_agent.predict(messages=[
+          {
+              "role": "user",
+              "content": inputs,
+          }
+      ])
 
 # COMMAND ----------
 
-
+check_guidelines("How long has databricks been a company")
