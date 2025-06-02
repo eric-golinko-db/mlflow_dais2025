@@ -1,0 +1,26 @@
+{
+  "version": "v1",
+  "host": "https://e2-dogfood.staging.cloud.databricks.com",
+  "remote_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/staging/files",
+  "last_modified_times": {
+    ".gitignore": "2025-05-28T09:10:07.050440686-04:00",
+    "config.yaml": "2025-05-28T09:08:16.118569257-04:00",
+    "databricks.yml": "2025-05-28T09:08:16.118842213-04:00",
+    "deploy.py": "2025-05-28T09:08:16.119070585-04:00",
+    "resources/deploy.yml": "2025-05-28T09:11:30.060863714-04:00"
+  },
+  "local_to_remote_names": {
+    ".gitignore": ".gitignore",
+    "config.yaml": "config.yaml",
+    "databricks.yml": "databricks.yml",
+    "deploy.py": "deploy",
+    "resources/deploy.yml": "resources/deploy.yml"
+  },
+  "remote_to_local_names": {
+    ".gitignore": ".gitignore",
+    "config.yaml": "config.yaml",
+    "databricks.yml": "databricks.yml",
+    "deploy": "deploy.py",
+    "resources/deploy.yml": "resources/deploy.yml"
+  }
+}

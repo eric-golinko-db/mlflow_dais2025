@@ -2,14 +2,3 @@ catalog: eric_golinko
 schema: genai
 model_name: mflow_dais2025
 mlflow_experiment_name: mlflow_dais2025
-llm_endpoint_name: databricks-claude-sonnet-4
-llm_config:
-  llm_parameters:
-    max_tokens: 1000
-    temperature: 0.0
-  system_prompt: "You are an helpful assitant that that answers questions about Databricks"
-input_example:
-  messages:
-  - content: How long has Databricks been in business? 
-    role: user 
-    name: eric.golinko@network.lilly.com 
