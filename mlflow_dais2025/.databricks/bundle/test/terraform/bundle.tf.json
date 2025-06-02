@@ -1,0 +1,68 @@
+{
+  "terraform": {
+    "required_providers": {
+      "databricks": {
+        "source": "databricks/databricks",
+        "version": "1.59.0"
+      }
+    }
+  },
+  "provider": {
+    "databricks": {}
+  },
+  "resource": {
+    "databricks_job": {
+      "deploy": {
+        "deployment": {
+          "kind": "BUNDLE",
+          "metadata_file_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/test/state/metadata.json"
+        },
+        "edit_mode": "UI_LOCKED",
+        "format": "MULTI_TASK",
+        "name": "test_deploy_assistant",
+        "parameter": [
+          {
+            "default": "eric_golinko",
+            "name": "catalog"
+          }
+        ],
+        "queue": {
+          "enabled": true
+        },
+        "tags": {},
+        "task": [
+          {
+            "notebook_task": {
+              "notebook_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/test/files/notebooks/AgentEval"
+            },
+            "task_key": "agent_eval"
+          },
+          {
+            "depends_on": [
+              {
+                "task_key": "register_model"
+              }
+            ],
+            "notebook_task": {
+              "notebook_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/test/files/notebooks/Deploy",
+              "source": "WORKSPACE"
+            },
+            "task_key": "deploy_model"
+          },
+          {
+            "depends_on": [
+              {
+                "task_key": "agent_eval"
+              }
+            ],
+            "notebook_task": {
+              "notebook_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/test/files/notebooks/RegisterModel",
+              "source": "WORKSPACE"
+            },
+            "task_key": "register_model"
+          }
+        ]
+      }
+    }
+  }
+}
