@@ -61,3 +61,4 @@ jobs:
         run: |
           echo "Validating environment: $TARGET_ENV"
           databricks bundle validate -t "$TARGET_ENV"
+          databricks bundle deploy -t "$TARGET_ENV"
