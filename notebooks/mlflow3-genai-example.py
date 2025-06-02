@@ -206,7 +206,7 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 
 # COMMAND ----------
 
-dbutils.library.restartPython()
+# dbutils.library.restartPython()
 
 # COMMAND ----------
 
