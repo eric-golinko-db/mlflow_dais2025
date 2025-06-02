@@ -22,7 +22,7 @@ targets:
       pipelines_development: true 
     default: true
     workspace: 
-      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -34,7 +34,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -46,7 +46,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -58,7 +58,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://e2-dogfood.staging.cloud.databricks.com/"
+      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE

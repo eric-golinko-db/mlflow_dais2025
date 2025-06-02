@@ -6,15 +6,11 @@ on:
       - 'test'
       - 'staging'
       - 'main'
-    paths:
-      - 'mlflow_dais2025/**'
   workflow_dispatch:
 
 jobs:
   deploy-bundle:
-    runs-on:
-      group: ubuntu-runners
-      labels: ubuntu-20.04-16core
+    runs-on: ubuntu-latest
     
     # Remove TARGET_ENV from here to avoid syntax issues
     # We'll set it in a separate step
@@ -64,4 +60,3 @@ jobs:
         run: |
           echo "Validating environment: $TARGET_ENV"
           databricks bundle validate -t "$TARGET_ENV"
-        working-directory: ./mlflow_dais2025
