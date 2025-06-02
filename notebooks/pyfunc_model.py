@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install --upgrade mlflow --pre databricks-agents==0.21.2 databricks-sdk==0.52.0  openai>=1.3.5
+# MAGIC %pip install databricks-agents databricks-sdk openai>=1.3.5 mlflow --upgrade --pre
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -234,7 +234,6 @@ class LLMChain(ChatModel):
     @mlflow.trace(name="pyfunc.predict", span_type="CHAIN")
     def predict(
         self,
-        context: mlflow.pyfunc.model.PythonModelContext,
         messages: List[Dict[str, str]],
         params: Optional[Dict[str, Any]] = None,
     ) -> ChatCompletionResponse:

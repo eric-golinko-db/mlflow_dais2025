@@ -3,7 +3,12 @@ resources:
     deploy:
       name: "${bundle.environment}_deploy_assistant"
       tasks:
+        - task_key: agent_eval
+          notebook_task:
+            notebook_path: ../notebooks/AgentEval.py
         - task_key: register_model
+          depends_on:
+            - task_key: agent_eval
           notebook_task:
             notebook_path: ../notebooks/RegisterModel.py
             source: WORKSPACE
