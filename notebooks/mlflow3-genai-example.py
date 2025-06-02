@@ -38,6 +38,12 @@
 
 # COMMAND ----------
 
+import mlflow
+
+config = mlflow.models.ModelConfig(development_config="../config.yaml")
+
+# COMMAND ----------
+
 # MAGIC %%writefile agent.py
 # MAGIC from typing import Any, Generator, Optional, Sequence, Union
 # MAGIC
@@ -66,7 +72,7 @@
 # MAGIC # Define your LLM endpoint and system prompt
 # MAGIC ############################################
 # MAGIC # Optional: Replace with your model serving endpoint
-# MAGIC LLM_ENDPOINT_NAME = "databricks-meta-llama-3-3-70b-instruct"
+# MAGIC LLM_ENDPOINT_NAME = config.get("llm_endpoint_name")
 # MAGIC llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
 # MAGIC
 # MAGIC # Optional: Update with your system prompt
@@ -364,10 +370,6 @@ with mlflow.start_run() as evaluation_run:
 
 # COMMAND ----------
 
-gen_ai_results.metrics
-
-# COMMAND ----------
-
 # MAGIC %md 
 # MAGIC ## View traces
 
@@ -385,13 +387,9 @@ traces
 
 # COMMAND ----------
 
-# TODO: Specify the catalog, schema, and model name for your model
-
-config = mlflow.models.ModelConfig(development_config="../config.yaml")
-
 catalog = config.get("catalog")
 schema = config.get("schema")
-model_name = f'{config.get("model_name")}_mlflow3ex'
+model_name = f'{config.get("model_name")}'
 
 UC_MODEL_NAME = f"{catalog}.{schema}.{model_name}"
 
@@ -431,3 +429,7 @@ print(model_version)
 # MAGIC For a more detailed example of a deployment task notebook, see the documentation ([AWS](https://docs.databricks.com/en/mlflow/deployment-job.html#deployment-notebook) | [Azure](https://learn.microsoft.com/en-us/azure/databricks/mlflow/deployment-job#deployment-notebook)).  
 # MAGIC
 # MAGIC After the agent is deployed, you can chat with it in AI playground to perform additional checks, share it with SMEs in your organization for feedback, or embed it in a production application. For details, see the documentation ([AWS](https://docs.databricks.com/en/generative-ai/deploy-agent.html) | [Azure](https://learn.microsoft.com/en-us/azure/databricks/generative-ai/deploy-agent)).
+
+# COMMAND ----------
+
+
