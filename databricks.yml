@@ -29,6 +29,18 @@ targets:
     variables:
         target_env: "test"
 
+  dev:
+    presets:
+      name_prefix: ""
+      pipelines_development: true
+    workspace: 
+      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+    permissions:
+        - user_name: eric.golinko@databricks.com
+          level: CAN_MANAGE
+    variables:
+        target_env: "dev"
+
   qa:
     presets:
       name_prefix: ""
