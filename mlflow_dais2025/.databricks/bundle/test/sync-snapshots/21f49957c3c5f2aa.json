@@ -1,0 +1,38 @@
+{
+  "version": "v1",
+  "host": "https://e2-dogfood.staging.cloud.databricks.com",
+  "remote_path": "/Workspace/Users/eric.golinko@databricks.com/.bundle/mlflow_dais2025/test/files",
+  "last_modified_times": {
+    ".gitignore": "2025-05-28T09:10:07.050440686-04:00",
+    "config.yaml": "2025-05-28T14:43:07.346611747-04:00",
+    "databricks.yml": "2025-05-28T14:44:48.802607408-04:00",
+    "notebooks/AgentEval.py": "2025-05-29T11:31:18.103959864-04:00",
+    "notebooks/Deploy.py": "2025-05-29T11:31:18.104378819-04:00",
+    "notebooks/RegisterModel.py": "2025-05-29T11:49:56.326253554-04:00",
+    "notebooks/pyfunc_model.py": "2025-05-29T11:31:18.105075022-04:00",
+    "notebooks/utils.py": "2025-05-28T14:43:07.347649133-04:00",
+    "resources/deploy.yml": "2025-05-29T11:31:18.105515436-04:00"
+  },
+  "local_to_remote_names": {
+    ".gitignore": ".gitignore",
+    "config.yaml": "config.yaml",
+    "databricks.yml": "databricks.yml",
+    "notebooks/AgentEval.py": "notebooks/AgentEval",
+    "notebooks/Deploy.py": "notebooks/Deploy",
+    "notebooks/RegisterModel.py": "notebooks/RegisterModel",
+    "notebooks/pyfunc_model.py": "notebooks/pyfunc_model",
+    "notebooks/utils.py": "notebooks/utils.py",
+    "resources/deploy.yml": "resources/deploy.yml"
+  },
+  "remote_to_local_names": {
+    ".gitignore": ".gitignore",
+    "config.yaml": "config.yaml",
+    "databricks.yml": "databricks.yml",
+    "notebooks/AgentEval": "notebooks/AgentEval.py",
+    "notebooks/Deploy": "notebooks/Deploy.py",
+    "notebooks/RegisterModel": "notebooks/RegisterModel.py",
+    "notebooks/pyfunc_model": "notebooks/pyfunc_model.py",
+    "notebooks/utils.py": "notebooks/utils.py",
+    "resources/deploy.yml": "resources/deploy.yml"
+  }
+}
