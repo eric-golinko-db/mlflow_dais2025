@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - 'test'
+      - 'dev'
       - 'staging'
       - 'main'
   workflow_dispatch:
@@ -62,3 +63,17 @@ jobs:
           echo "Validating environment: $TARGET_ENV"
           databricks bundle validate -t "$TARGET_ENV"
           databricks bundle deploy -t "$TARGET_ENV"
+
+     ## Running on merge
+      - name: Deploy Bundle (or Run in QA/Prod)
+        run: |
+          echo "Processing environment: $TARGET_ENV"
+          if [ "$TARGET_ENV" = "test" ]; then
+            echo "Deploying using databricks bundle deploy to environment: $TARGET_ENV"
+            databricks bundle deploy -t "$TARGET_ENV"
+          else
+            echo "Deploying using databricks bundle deploy to environment: $TARGET_ENV"
+            databricks bundle deploy -t "$TARGET_ENV"
+            echo "Running using databricks bundle run to environment: $TARGET_ENV"
+            databricks bundle run deploy -t "$TARGET_ENV"
+          fi
