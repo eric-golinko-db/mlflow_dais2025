@@ -71,6 +71,9 @@ jobs:
           if [ "$TARGET_ENV" = "test" ]; then
             echo "Deploying using databricks bundle deploy to environment: $TARGET_ENV"
             databricks bundle deploy -t "$TARGET_ENV"
+          elif [ "$TARGET_ENV" = "dev" ]; then
+            echo "Deploying using databricks bundle deploy to environment: $TARGET_ENV"
+            databricks bundle deploy -t "$TARGET_ENV"  
           else
             echo "Deploying using databricks bundle deploy to environment: $TARGET_ENV"
             databricks bundle deploy -t "$TARGET_ENV"
