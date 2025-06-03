@@ -72,7 +72,7 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 # MAGIC # Define your LLM endpoint and system prompt
 # MAGIC ############################################
 # MAGIC # Optional: Replace with your model serving endpoint
-# MAGIC LLM_ENDPOINT_NAME = config.get("llm_endpoint_name")
+# MAGIC LLM_ENDPOINT_NAME = "databricks-meta-llama-3-3-70b-instruct"
 # MAGIC llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
 # MAGIC
 # MAGIC # Optional: Update with your system prompt
