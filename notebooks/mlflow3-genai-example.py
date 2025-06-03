@@ -38,6 +38,16 @@
 
 # COMMAND ----------
 
+dbutils.widgets.dropdown(
+    name="catalog",
+    defaultValue="test",
+    choices=[
+        "test", "dev", "staging", "prod",
+    ],
+)
+
+# COMMAND ----------
+
 import mlflow
 
 config = mlflow.models.ModelConfig(development_config="../config.yaml")
@@ -383,7 +393,7 @@ traces
 
 # COMMAND ----------
 
-catalog = config.get("catalog")
+catalog = dbutils.widgets.get("catalog")
 schema = config.get("schema")
 model_name = f'{config.get("model_name")}'
 
