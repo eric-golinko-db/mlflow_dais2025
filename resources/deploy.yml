@@ -16,4 +16,4 @@ resources:
         enabled: true
       parameters:
         - name: catalog
-          default: eric_golinko
+          default: ${var.target_env}

@@ -38,6 +38,16 @@
 
 # COMMAND ----------
 
+dbutils.widgets.dropdown(
+    name="catalog",
+    defaultValue="test",
+    choices=[
+        "test", "dev", "staging", "prod",
+    ],
+)
+
+# COMMAND ----------
+
 import mlflow
 
 config = mlflow.models.ModelConfig(development_config="../config.yaml")
@@ -206,10 +216,6 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 
 # COMMAND ----------
 
-# dbutils.library.restartPython()
-
-# COMMAND ----------
-
 from agent import AGENT
 
 AGENT.predict({"messages": [{"role": "user", "content": "Hello!"}]})
@@ -340,7 +346,7 @@ eval_results
 
 from mlflow.genai import scorers
 
-with mlflow.start_run() as evaluation_run:
+with mlflow.start_run(run_name="mlflow_dais2025") as evaluation_run:
     eval_dataset: mlflow.entities.Dataset = mlflow.data.from_pandas(
         df=eval_df,
         name="eval_dataset",
@@ -387,7 +393,7 @@ traces
 
 # COMMAND ----------
 
-catalog = config.get("catalog")
+catalog = dbutils.widgets.get("catalog")
 schema = config.get("schema")
 model_name = f'{config.get("model_name")}'
 
