@@ -16,23 +16,12 @@ include:
 
 # Deployment Target specific values for workspace
 targets:
-  test:
-    presets:
-      name_prefix: ""
-      pipelines_development: true 
-    default: true
-    workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
-    permissions:
-        - user_name: eric.golinko@databricks.com
-          level: CAN_MANAGE
-    variables:
-        target_env: "test"
 
   dev:
     presets:
       name_prefix: ""
       pipelines_development: true
+    default: true  
     workspace: 
       host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
     permissions:
