@@ -1,4 +1,4 @@
-catalog: eric_golinko
-schema: genai
+catalog: workspace
+schema: default
 model_name: mflow_dais2025
 mlflow_experiment_name: mlflow_dais2025

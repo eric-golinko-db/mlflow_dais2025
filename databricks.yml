@@ -23,7 +23,7 @@ targets:
       pipelines_development: true
     default: true  
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -35,7 +35,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -47,7 +47,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
@@ -59,7 +59,7 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
         - user_name: eric.golinko@databricks.com
           level: CAN_MANAGE
