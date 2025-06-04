@@ -42,7 +42,7 @@ dbutils.widgets.dropdown(
     name="catalog",
     defaultValue="dev",
     choices=[
-         "dev", "staging", "prod",
+        "test", "dev", "staging", "prod",
     ],
 )
 
