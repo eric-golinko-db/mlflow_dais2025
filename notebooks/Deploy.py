@@ -6,9 +6,9 @@
 
 dbutils.widgets.dropdown(
     name="catalog",
-    defaultValue="test",
+    defaultValue="dev",
     choices=[
-        "test", "dev", "staging", "prod",
+        "dev", "staging", "prod",
     ],
 )
 
@@ -65,7 +65,7 @@ model_version = get_latest_model_version(f"{CATALOG}.{SCHEMA}.{MODEL_NAME}")
 agents.deploy(
     model_name=f"{CATALOG}.{SCHEMA}.{MODEL_NAME}",
     model_version=model_version,
-    environment_vars=env_vars,
+    # environment_vars=env_vars,
 )
 
 agents.set_review_instructions(
