@@ -4,11 +4,21 @@
 
 # COMMAND ----------
 
+dbutils.widgets.dropdown(
+    name="catalog",
+    defaultValue="test",
+    choices=[
+        "test", "dev", "staging", "prod",
+    ],
+)
+
+# COMMAND ----------
+
 import mlflow
 
 config = mlflow.models.ModelConfig(development_config="../config.yaml")
 
-CATALOG = config.get("catalog")
+CATALOG = dbutils.widgets.get("catalog")
 SCHEMA = config.get("schema")
 MODEL_NAME = config.get("model_name")
 
@@ -47,12 +57,6 @@ env_vars = {
 
 # COMMAND ----------
 
-import mlflow 
-import databricks.agents as a
-mlflow.__version__, a.__version__
-
-# COMMAND ----------
-
 from utils import get_latest_model_version
 from databricks import agents
 
@@ -67,3 +71,7 @@ agents.deploy(
 agents.set_review_instructions(
     f"{CATALOG}.{SCHEMA}.{MODEL_NAME}", reviewer_instructions
 )
+
+# COMMAND ----------
+
+
