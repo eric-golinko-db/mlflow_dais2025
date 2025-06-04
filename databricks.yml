@@ -23,9 +23,9 @@ targets:
       pipelines_development: true
     default: true  
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
-        - user_name: eric.golinko@databricks.com
+        - user_name: egolinko@gmail.com
           level: CAN_MANAGE
     variables:
         target_env: "dev"
@@ -35,9 +35,9 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
-        - user_name: eric.golinko@databricks.com
+        - user_name: egolinko@gmail.com
           level: CAN_MANAGE
     variables:
         target_env: "qa"
@@ -47,9 +47,9 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
-        - user_name: eric.golinko@databricks.com
+        - user_name: egolinko@gmail.com
           level: CAN_MANAGE
     variables:
         target_env: "staging"
@@ -59,9 +59,9 @@ targets:
       name_prefix: ""
       pipelines_development: true
     workspace: 
-      host: "https://dbc-d24ceabb-c638.cloud.databricks.com/"
+      host: "https://dbc-92de2e99-d5cb.cloud.databricks.com/"
     permissions:
-        - user_name: eric.golinko@databricks.com
+        - user_name: egolinko@gmail.com
           level: CAN_MANAGE
     variables:
         target_env: "prod"
