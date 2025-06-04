@@ -102,7 +102,7 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 # MAGIC # You can also add local LangChain python tools. See https://python.langchain.com/docs/concepts/tools
 # MAGIC
 # MAGIC # Optional: Add additional tools
-# MAGIC uc_tool_names = ["system.ai.python_exec"]
+# MAGIC uc_tool_names = ["workspace.default.python_exec"]
 # MAGIC uc_toolkit = UCFunctionToolkit(function_names=uc_tool_names)
 # MAGIC tools.extend(uc_toolkit.tools)
 # MAGIC
