@@ -47,6 +47,12 @@ env_vars = {
 
 # COMMAND ----------
 
+import mlflow 
+import databricks.agents as a
+mlflow.__version__, a.__version__
+
+# COMMAND ----------
+
 from utils import get_latest_model_version
 from databricks import agents
 
