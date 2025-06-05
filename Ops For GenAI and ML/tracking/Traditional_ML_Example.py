@@ -129,7 +129,7 @@ print(mlflow.get_logged_model(logged_model.model_id).to_dictionary())
 
 # COMMAND ----------
 
-CATALOG = "eric_golinko"
+CATALOG = "dev"
 SCHEMA = "ops"
 
 mlflow.register_model(model_info.model_uri, name=f"{CATALOG}.{SCHEMA}.classic_ml_model")

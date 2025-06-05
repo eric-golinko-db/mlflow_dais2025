@@ -12,8 +12,8 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install databricks-langchain databricks-agents uv langgraph==0.3.4
-# MAGIC %pip install mlflow>=3.0.0.rc0  --upgrade --pre
+# MAGIC %pip install databricks-langchain uv langgraph==0.3.4
+# MAGIC %pip install mlflow databricks-agents --upgrade --pre
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -102,7 +102,7 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 # MAGIC # You can also add local LangChain python tools. See https://python.langchain.com/docs/concepts/tools
 # MAGIC
 # MAGIC # Optional: Add additional tools
-# MAGIC uc_tool_names = ["system.ai.python_exec"]
+# MAGIC uc_tool_names = ["workspace.default.python_exec"]
 # MAGIC uc_toolkit = UCFunctionToolkit(function_names=uc_tool_names)
 # MAGIC tools.extend(uc_toolkit.tools)
 # MAGIC

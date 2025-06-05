@@ -9,7 +9,7 @@
 
 # COMMAND ----------
 
-dbutils.widgets.text("model_name", "eric_golinko.ops.classic_ml_model")
+dbutils.widgets.text("model_name", "dev.ops.classic_ml_model")
 dbutils.widgets.text("model_version", "1")
 
 # COMMAND ----------

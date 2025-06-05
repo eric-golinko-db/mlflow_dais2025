@@ -11,16 +11,16 @@
 
 # TODO: Update these values as necessary
 
-CATALOG = "eric_golinko"
+CATALOG = "dev"
 SCHEMA = "ops"
 
 model_name = f"{CATALOG}.{SCHEMA}.classic_ml_model"
 job_name = "deployment_job"
 
 # TODO: Create notebooks for each task and populate the notebook path here
-evaluation_notebook_path = "/Workspace/Users/eric.golinko@databricks.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Evaluation"
-approval_notebook_path = "/Workspace/Users/eric.golinko@databricks.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Approval"
-deployment_notebook_path = "/Workspace/Users/eric.golinko@databricks.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Deployment"
+evaluation_notebook_path = "/Workspace/Users/egolinko@gmail.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Evaluation"
+approval_notebook_path = "/Workspace/Users/egolinko@gmail.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Approval"
+deployment_notebook_path = "/Workspace/Users/egolinko@gmail.com/mlflow_dais2025/Ops For GenAI and ML/deployment_jobs/job-task-notebooks/Deployment"
 
 # COMMAND ----------
 
