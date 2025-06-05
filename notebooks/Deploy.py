@@ -1,14 +1,15 @@
 # Databricks notebook source
-# MAGIC %pip install databricks-agents databricks-sdk openai>=1.3.5 mlflow --upgrade --pre
+# MAGIC %pip install databricks-langchain uv langgraph==0.3.4
+# MAGIC %pip install mlflow databricks-agents --upgrade --pre
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
 
 dbutils.widgets.dropdown(
     name="catalog",
-    defaultValue="test",
+    defaultValue="dev",
     choices=[
-        "test", "dev", "staging", "prod",
+        "dev", "staging", "prod",
     ],
 )
 

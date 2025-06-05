@@ -5,12 +5,12 @@ resources:
       tasks:
         - task_key: register_model
           notebook_task:
-            notebook_path: ../notebooks/register_model.py
+            notebook_path: ../notebooks/mlflow3-genai-example.py
         - task_key: deploy_model
           depends_on:
             - task_key: register_model
           notebook_task:
-            notebook_path: ../notebooks/deploy.py
+            notebook_path: ../notebooks/Deploy.py
             source: WORKSPACE
       queue:
         enabled: true
