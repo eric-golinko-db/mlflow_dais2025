@@ -12,8 +12,8 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install databricks-langchain databricks-agents uv langgraph==0.3.4
-# MAGIC %pip install mlflow>=3.0.0.rc0  --upgrade --pre
+# MAGIC %pip install databricks-langchain uv langgraph==0.3.4
+# MAGIC %pip install mlflow databricks-agents --upgrade --pre
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
