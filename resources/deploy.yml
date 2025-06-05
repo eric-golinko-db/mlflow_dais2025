@@ -14,3 +14,6 @@ resources:
             source: WORKSPACE
       queue:
         enabled: true
+      parameters:
+        - name: catalog
+          default: ${bundle.environment}
