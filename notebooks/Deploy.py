@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %pip install databricks-langchain uv langgraph==0.3.4
-# MAGIC %pip install mlflow databricks-agents --upgrade --pre
+# MAGIC %pip install mlflow==3.1.0rc0 databricks-agents==1.0.0rc2
 # MAGIC dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -49,10 +49,6 @@ agents.deploy(
     model_name=f"{CATALOG}.{SCHEMA}.{MODEL_NAME}",
     model_version=model_version,
     environment_vars=env_vars,
-)
-
-agents.set_review_instructions(
-    f"{CATALOG}.{SCHEMA}.{MODEL_NAME}", reviewer_instructions
 )
 
 # COMMAND ----------
