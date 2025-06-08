@@ -25,24 +25,6 @@ MODEL_NAME = config.get("model_name")
 
 # COMMAND ----------
 
-reviewer_instructions = f"""## Welcome to the Review App 
-
-### Purpose: 
-
-Feedback 
-
-### Examples:
-
-Examples
-
-### Instructions: 
-
-Instructions
-
-"""
-
-# COMMAND ----------
-
 import os
 
 os.environ["DATABRICKS_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
