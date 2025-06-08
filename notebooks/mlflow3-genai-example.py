@@ -18,6 +18,13 @@
 
 # COMMAND ----------
 
+import mlflow
+import databricks.agents as a
+
+a.__version__, mlflow.__version__
+
+# COMMAND ----------
+
 # MAGIC %md 
 # MAGIC
 # MAGIC ## Define the agent in code
@@ -38,19 +45,29 @@
 
 # COMMAND ----------
 
+import mlflow
+
+config = mlflow.models.ModelConfig(development_config="../config.yaml")
+
+# COMMAND ----------
+
 dbutils.widgets.dropdown(
     name="catalog",
     defaultValue="dev",
     choices=[
-        "test", "dev", "staging", "prod",
+        "dev",
+        "staging",
+        "prod",
     ],
 )
 
 # COMMAND ----------
 
-import mlflow
+catalog = dbutils.widgets.get("catalog")
+schema = config.get("schema")
+model_name = f'{config.get("model_name")}'
 
-config = mlflow.models.ModelConfig(development_config="../config.yaml")
+UC_MODEL_NAME = f"{catalog}.{schema}.{model_name}"
 
 # COMMAND ----------
 
@@ -86,7 +103,7 @@ config = mlflow.models.ModelConfig(development_config="../config.yaml")
 # MAGIC llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
 # MAGIC
 # MAGIC # Optional: Update with your system prompt
-# MAGIC system_prompt = "You are a chatbot that can answer questions about Databricks."
+# MAGIC system_prompt = "You are a chatbot that can answer questions about Mflow, your responses should be in the form of a nasty pirate."
 # MAGIC
 # MAGIC ###############################################################################
 # MAGIC ## Define tools for your agent, enabling it to retrieve data or take actions
@@ -260,19 +277,17 @@ for tool in tools:
         resources.append(DatabricksFunction(function_name=tool.uc_function_name))
 
 
-with mlflow.start_run():
+with mlflow.start_run(run_name=f"{catalog}_mflow_dais2025_model"):
     logged_agent_info = mlflow.pyfunc.log_model(
         artifact_path="agent",
         python_model="agent.py",
         pip_requirements=[
-            "mlflow",
+            "databricks-agents==1.0.0rc2",
+            "mlflow==3.1.0rc0",
             "langgraph==0.3.4",
             "databricks-langchain",
         ],
-        params={
-            "temperature": 0.1,
-            "max_tokens": 2000
-        },
+        params={"temperature": 0.1, "max_tokens": 2000},
         resources=resources,
         model_type="agent",
         input_example={"messages": [{"role": "user", "content": "What is MLflow?"}]},
@@ -297,92 +312,38 @@ print(logged_model.model_id, logged_model.params)
 
 # COMMAND ----------
 
-import pandas as pd
-
-import pandas as pd
-eval_df = pd.DataFrame(
-  {
-    "request": [
-      "What is MLflow Tracking and how does it work?",
-      "What is Unity Catalog?",
-      "What are user-defined functions (UDFs)?"
-    ],
-    "expected_response": [
-      """MLflow Tracking is a key component of the MLflow platform designed to record and manage machine learning experiments. It enables data scientists and engineers to log parameters, code versions, metrics, and artifacts in a systematic way, facilitating experiment tracking and reproducibility.\n\nHow It Works:\n\nAt the heart of MLflow Tracking is the concept of a run, which is an execution of a machine learning code. Each run can log the following:\n\nParameters: Input variables or hyperparameters used in the model (e.g., learning rate, number of trees). Metrics: Quantitative measures to evaluate the model's performance (e.g., accuracy, loss). Artifacts: Output files like models, datasets, or images generated during the run. Source Code: The version of the code or Git commit hash used. These logs are stored in a tracking server, which can be set up locally or on a remote server. The tracking server uses a backend storage (like a database or file system) to keep a record of all runs and their associated data.\n\n Users interact with MLflow Tracking through its APIs available in multiple languages (Python, R, Java, etc.). By invoking these APIs in the code, you can start and end runs, and log data as the experiment progresses. Additionally, MLflow offers autologging capabilities for popular machine learning libraries, automatically capturing relevant parameters and metrics without manual code changes.\n\nThe logged data can be visualized using the MLflow UI, a web-based interface that displays all experiments and runs. This UI allows you to compare runs side-by-side, filter results, and analyze performance metrics over time. It aids in identifying the best models and understanding the impact of different parameters.\n\nBy providing a structured way to record experiments, MLflow Tracking enhances collaboration among team members, ensures transparency, and makes it easier to reproduce results. It integrates seamlessly with other MLflow components like Projects and Model Registry, offering a comprehensive solution for managing the machine learning lifecycle.""",
-      """Unity Catalog is a feature in Databricks that allows you to create a centralized inventory of your data assets, such as tables, views, and functions, and share them across different teams and projects. It enables easy discovery, collaboration, and reuse of data assets within your organization.\n\nWith Unity Catalog, you can:\n\n1. Create a single source of truth for your data assets: Unity Catalog acts as a central repository of all your data assets, making it easier to find and access the data you need.\n2. Improve collaboration: By providing a shared inventory of data assets, Unity Catalog enables data scientists, engineers, and other stakeholders to collaborate more effectively.\n3. Foster reuse of data assets: Unity Catalog encourages the reuse of existing data assets, reducing the need to create new assets from scratch and improving overall efficiency.\n4. Enhance data governance: Unity Catalog provides a clear view of data assets, enabling better data governance and compliance.\n\nUnity Catalog is particularly useful in large organizations where data is scattered across different teams, projects, and environments. It helps create a unified view of data assets, making it easier to work with data across different teams and projects.""",
-      """User-defined functions (UDFs) in the context of Databricks and Apache Spark are custom functions that you can create to perform specific tasks on your data. These functions are written in a programming language such as Python, Java, Scala, or SQL, and can be used to extend the built-in functionality of Spark.\n\nUDFs can be used to perform complex data transformations, data cleaning, or to apply custom business logic to your data. Once defined, UDFs can be invoked in SQL queries or in DataFrame transformations, allowing you to reuse your custom logic across multiple queries and applications.\n\nTo use UDFs in Databricks, you first need to define them in a supported programming language, and then register them with the SparkSession. Once registered, UDFs can be used in SQL queries or DataFrame transformations like any other built-in function.\n\nHere\'s an example of how to define and register a UDF in Python:\n\n```python\nfrom pyspark.sql.functions import udf\nfrom pyspark.sql.types import IntegerType\n\n# Define the UDF function\ndef multiply_by_two(value):\n    return value * 2\n\n# Register the UDF with the SparkSession\nmultiply_udf = udf(multiply_by_two, IntegerType())\n\n# Use the UDF in a DataFrame transformation\ndata = spark.range(10)\nresult = data.withColumn("multiplied", multiply_udf(data.id))\nresult.show()\n```\n\nIn this example, we define a UDF called `multiply_by_two` that multiplies a given value by two. We then register this UDF with the SparkSession using the `udf` function, and use it in a DataFrame transformation to multiply the `id` column of a DataFrame by two."""
-    ],
-  }
-)
-display(eval_df)
-
+evals = [
+    {
+        "inputs": {
+            "query": "What is MLflow Tracking and how does it work?",
+        },
+        "expectations": {
+            "expected_facts": [
+                """MLflow Tracking is a key component of the MLflow platform designed to record and manage machine learning experiments. It enables data scientists and engineers to log parameters, code versions, metrics, and artifacts in a systematic way, facilitating experiment tracking and reproducibility.\n\nHow It Works:\n\nAt the heart of MLflow Tracking is the concept of a run, which is an execution of a machine learning code. Each run can log the following:\n\nParameters: Input variables or hyperparameters used in the model (e.g., learning rate, number of trees). Metrics: Quantitative measures to evaluate the model's performance (e.g., accuracy, loss). Artifacts: Output files like models, datasets, or images generated during the run. Source Code: The version of the code or Git commit hash used. These logs are stored in a tracking server, which can be set up locally or on a remote server. The tracking server uses a backend storage (like a database or file system) to keep a record of all runs and their associated data.\n\n Users interact with MLflow Tracking through its APIs available in multiple languages (Python, R, Java, etc.). By invoking these APIs in the code, you can start and end runs, and log data as the experiment progresses. Additionally, MLflow offers autologging capabilities for popular machine learning libraries, automatically capturing relevant parameters and metrics without manual code changes.\n\nThe logged data can be visualized using the MLflow UI, a web-based interface that displays all experiments and runs. This UI allows you to compare runs side-by-side, filter results, and analyze performance metrics over time. It aids in identifying the best models and understanding the impact of different parameters.\n\nBy providing a structured way to record experiments, MLflow Tracking enhances collaboration among team members, ensures transparency, and makes it easier to reproduce results. It integrates seamlessly with other MLflow components like Projects and Model Registry, offering a comprehensive solution for managing the machine learning lifecycle."""
+            ],
+        },
+    }
+]
 
 # COMMAND ----------
 
-from mlflow.genai import scorer
-
-evals = [
-  {
-    "inputs": {"messages": [{"role": "user", "content": "What is Databricks"}]},
-  }, {
-    "inputs": {"inputs": ["What is Databricks"]},
-  }
-]
-
-@scorer
-def check_valid_format(inputs, outputs=None, expectations=None, traces=None):
-  # Check that the request contains a top-level key called "inputs" with a value of a list
-  return "inputs" in inputs and isinstance(inputs.get("inputs"), list)
-
-
-with mlflow.start_run(run_name="check_format"):
-  eval_results = mlflow.genai.evaluate(
-      data=pd.DataFrame.from_records(evals),
-      scorers=[check_valid_format],
-  )
-eval_results
+# wrap my agent to use in scoring
+def predictor(query):
+    return mlflow.pyfunc.load_model(f"models:/{logged_model.model_id}").predict(
+        {"messages": [{"role": "user", "content": query}]}
+    )
 
 # COMMAND ----------
 
 from mlflow.genai import scorers
 
-with mlflow.start_run(run_name="mlflow_dais2025") as evaluation_run:
-    eval_dataset: mlflow.entities.Dataset = mlflow.data.from_pandas(
-        df=eval_df,
-        name="eval_dataset",
+with mlflow.start_run(run_name=f"{catalog}_mlflow_dais2025_eval") as evaluation_run:
+    eval_results = mlflow.genai.evaluate(
+        data=evals, 
+        predict_fn=predictor, 
+        scorers=[scorers.Safety(), scorers.Correctness()]
     )
-    # Run the agent evaluation 
-    # gen_ai_results = mlflow.genai.evaluate(
-    #     data=pd.DataFrame.from_records(evals),
-    #     scorers=[check_valid_format],
-    # )
-
-    eval_results = mlflow.evaluate(
-        model=f"models:/{logged_model.model_id}",
-        data=eval_dataset,
-        model_type="databricks-agent"
-    )
-
-    # Log evaluation metrics and associate with agent
-    mlflow.log_metrics(
-        metrics=eval_results.metrics,
-        dataset=eval_dataset,
-        # Specify the ID of the agent logged above
-        model_id=logged_model.model_id
-    )
-
 # Review the evaluation results in the MLFLow UI (see console output), or access them in place:
-# display(eval_results.tables['eval_results'])
-
-# COMMAND ----------
-
-# MAGIC %md 
-# MAGIC ## View traces
-
-# COMMAND ----------
-
-traces = mlflow.search_traces(model_id=logged_model.model_id)
-traces
 
 # COMMAND ----------
 
@@ -390,14 +351,6 @@ traces
 # MAGIC ## Register the model to Unity Catalog
 # MAGIC
 # MAGIC Before you deploy the agent, you must register the agent to Unity Catalog.
-
-# COMMAND ----------
-
-catalog = dbutils.widgets.get("catalog")
-schema = config.get("schema")
-model_name = f'{config.get("model_name")}'
-
-UC_MODEL_NAME = f"{catalog}.{schema}.{model_name}"
 
 # COMMAND ----------
 
@@ -416,8 +369,11 @@ uc_registered_model_info = mlflow.register_model(
 
 # Get the model version
 from mlflow import MlflowClient
+
 client = MlflowClient()
-model_version = client.get_model_version(name=UC_MODEL_NAME, version=uc_registered_model_info.version)
+model_version = client.get_model_version(
+    name=UC_MODEL_NAME, version=uc_registered_model_info.version
+)
 print(model_version)
 
 # COMMAND ----------

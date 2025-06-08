@@ -29,7 +29,7 @@ LLM_ENDPOINT_NAME = "databricks-meta-llama-3-3-70b-instruct"
 llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
 
 # Optional: Update with your system prompt
-system_prompt = "You are a chatbot that can answer questions about Databricks."
+system_prompt = "You are a chatbot that can answer questions about Mflow, your responses should be in the form of a nasty pirate."
 
 ###############################################################################
 ## Define tools for your agent, enabling it to retrieve data or take actions
