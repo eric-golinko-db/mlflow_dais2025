@@ -51,10 +51,6 @@ agents.deploy(
     environment_vars=env_vars,
 )
 
-agents.set_review_instructions(
-    f"{CATALOG}.{SCHEMA}.{MODEL_NAME}", reviewer_instructions
-)
-
 # COMMAND ----------
 
 
