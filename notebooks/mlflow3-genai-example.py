@@ -103,7 +103,7 @@ UC_MODEL_NAME = f"{catalog}.{schema}.{model_name}"
 # MAGIC llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
 # MAGIC
 # MAGIC # Optional: Update with your system prompt
-# MAGIC system_prompt = "You are a chatbot that can answer questions about Mflow"
+# MAGIC system_prompt = "You are a chatbot that can answer questions about Mflow, your responses should be in the form of a nasty pirate."
 # MAGIC
 # MAGIC ###############################################################################
 # MAGIC ## Define tools for your agent, enabling it to retrieve data or take actions
