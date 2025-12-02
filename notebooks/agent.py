@@ -1,149 +1,85 @@
-from typing import Any, Generator, Optional, Sequence, Union
+import warnings
+from typing import Any, Generator
 
+import backoff
 import mlflow
-from databricks_langchain import (
-    ChatDatabricks,
-    UCFunctionToolkit,
-    VectorSearchRetrieverTool,
+import openai
+from databricks.sdk import WorkspaceClient
+from mlflow.entities import SpanType
+from mlflow.pyfunc import ResponsesAgent
+from mlflow.types.responses import (
+    ResponsesAgentRequest,
+    ResponsesAgentResponse,
+    ResponsesAgentStreamEvent,
+    output_to_responses_items_stream,
+    to_chat_completions_input,
 )
-from langchain_core.language_models import LanguageModelLike
-from langchain_core.runnables import RunnableConfig, RunnableLambda
-from langchain_core.tools import BaseTool
-from langgraph.graph import END, StateGraph
-from langgraph.graph.graph import CompiledGraph
-from langgraph.graph.state import CompiledStateGraph
-from langgraph.prebuilt.tool_node import ToolNode
-from mlflow.langchain.chat_agent_langgraph import ChatAgentState, ChatAgentToolNode
-from mlflow.pyfunc import ChatAgent
-from mlflow.types.agent import (
-    ChatAgentChunk,
-    ChatAgentMessage,
-    ChatAgentResponse,
-    ChatContext,
-)
-############################################
-# Define your LLM endpoint and system prompt
-############################################
-# Optional: Replace with your model serving endpoint
-LLM_ENDPOINT_NAME = "databricks-meta-llama-3-3-70b-instruct"
-llm = ChatDatabricks(endpoint=LLM_ENDPOINT_NAME, temperature=0.1, max_tokens=2000)
-
-# Optional: Update with your system prompt
-system_prompt = "You are a chatbot that can answer questions about Mflow, your responses should be in the form of a nasty pirate."
-
-###############################################################################
-## Define tools for your agent, enabling it to retrieve data or take actions
-## beyond text generation
-## To create and see usage examples of more tools, see
-## https://docs.databricks.com/en/generative-ai/agent-framework/agent-tool.html
-###############################################################################
-tools = []
-
-# You can use UDFs in Unity Catalog as agent tools
-# Below, we add the `system.ai.python_exec` UDF, which provides
-# a python code interpreter tool to our agent
-# You can also add local LangChain python tools. See https://python.langchain.com/docs/concepts/tools
-
-# Optional: Add additional tools
-uc_tool_names = ["workspace.default.python_exec"]
-uc_toolkit = UCFunctionToolkit(function_names=uc_tool_names)
-tools.extend(uc_toolkit.tools)
-
-# Use Databricks vector search indexes as tools
-# See https://docs.databricks.com/en/generative-ai/agent-framework/unstructured-retrieval-tools.html
-# for details
-
-# Optional: Add vector search indexes
-# vector_search_tools = [
-#         VectorSearchRetrieverTool(
-#         index_name="",
-#         # filters="..."
-#     )
-# ]
-# tools.extend(vector_search_tools)
-
-#####################
-## Define agent logic
-#####################
+from databricks.vector_search.client import VectorSearchClient
+from databricks.vector_search.reranker import DatabricksReranker
 
 
-def create_tool_calling_agent(
-    model: LanguageModelLike,
-    tools: Union[ToolNode, Sequence[BaseTool]],
-    system_prompt: Optional[str] = None,
-) -> CompiledGraph:
-    model = model.bind_tools(tools)
+THRESHOLD = 0.1
 
-    # Define the function that determines which node to go to
-    def should_continue(state: ChatAgentState):
-        messages = state["messages"]
-        last_message = messages[-1]
-        # If there are function calls, continue. else, end
-        if last_message.get("tool_calls"):
-            return "continue"
-        else:
-            return "end"
+# TODO: Replace with your model serving endpoint
+LLM_ENDPOINT_NAME = "databricks-claude-3-7-sonnet"
 
-    if system_prompt:
-        preprocessor = RunnableLambda(
-            lambda state: [{"role": "system", "content": system_prompt}]
-            + state["messages"]
-        )
-    else:
-        preprocessor = RunnableLambda(lambda state: state["messages"])
-    model_runnable = preprocessor | model
-
-    def call_model(
-        state: ChatAgentState,
-        config: RunnableConfig,
-    ):
-        response = model_runnable.invoke(state, config)
-
-        return {"messages": [response]}
-
-    workflow = StateGraph(ChatAgentState)
-
-    workflow.add_node("agent", RunnableLambda(call_model))
-    workflow.add_node("tools", ChatAgentToolNode(tools))
-
-    workflow.set_entry_point("agent")
-    workflow.add_conditional_edges(
-        "agent",
-        should_continue,
-        {
-            "continue": "tools",
-            "end": END,
-        },
-    )
-    workflow.add_edge("tools", "agent")
-
-    return workflow.compile()
+# TODO: Update with your system prompt
+SYSTEM_PROMPT = """
+You are a helpful assistant that provides brief, clear responses.
+"""
 
 
-class LangGraphChatAgent(ChatAgent):
-    def __init__(self, agent: CompiledStateGraph):
-        self.agent = agent
+class SimpleChatAgent(ResponsesAgent):
+    """
+    Simple chat agent that calls an LLM using the Databricks OpenAI client API.
 
-    def predict(
-        self,
-        messages: list[ChatAgentMessage],
-        context: Optional[ChatContext] = None,
-        custom_inputs: Optional[dict[str, Any]] = None,
-    ) -> ChatAgentResponse:
-        request = {"messages": self._convert_messages_to_dict(messages)}
+    You can replace this with your own agent.
+    The decorators @mlflow.trace tell MLflow Tracing to track calls to the agent.
+    """
 
-        messages = []
-        for event in self.agent.stream(request, stream_mode="updates"):
-            for node_data in event.values():
-                messages.extend(
-                    ChatAgentMessage(**msg) for msg in node_data.get("messages", [])
-                )
-        return ChatAgentResponse(messages=messages)
+    def __init__(self):
+        self.workspace_client = WorkspaceClient()
+        self.client = self.workspace_client.serving_endpoints.get_open_ai_client()
+        self.llm_endpoint = LLM_ENDPOINT_NAME
+        self.SYSTEM_PROMPT = SYSTEM_PROMPT
+    
+
+    @backoff.on_exception(backoff.expo, openai.RateLimitError)
+    @mlflow.trace(span_type=SpanType.LLM)
+    def call_llm(self, messages: list[dict[str, Any]]) -> Generator[dict[str, Any], None, None]:
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="PydanticSerializationUnexpectedValue")
+            for chunk in self.client.chat.completions.create(
+                model=self.llm_endpoint,
+                messages=to_chat_completions_input(messages),
+                stream=True,
+            ):
+                yield chunk.to_dict()
+
+    def get_context(self, query: str):
+        docs = self.vector_retriever.query_segment(query)
+        context = [doc["segmentDescription"] for doc in docs]
+        return " ".join(context)
+
+    # With autologging, you do not need @mlflow.trace here, but you can add it to override the span type.
+    def predict(self, request: ResponsesAgentRequest) -> ResponsesAgentResponse:
+        outputs = [
+            event.item
+            for event in self.predict_stream(request)
+            if event.type == "response.output_item.done"
+        ]
+        return ResponsesAgentResponse(output=outputs, custom_outputs=request.custom_inputs)
+
+    # With autologging, you do not need @mlflow.trace here, but you can add it to override the span type.
+    def predict_stream(
+        self, request: ResponsesAgentRequest
+    ) -> Generator[ResponsesAgentStreamEvent, None, None]:
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}] + [
+            i.model_dump() for i in request.input
+        ]
+        yield from output_to_responses_items_stream(chunks=self.call_llm(messages))
 
 
-# Create the agent object, and specify it as the agent object to use when
-# loading the agent back for inference via mlflow.models.set_model()
-mlflow.langchain.autolog()
-agent = create_tool_calling_agent(llm, tools, system_prompt)
-AGENT = LangGraphChatAgent(agent)
+mlflow.openai.autolog()
+AGENT = SimpleChatAgent()
 mlflow.models.set_model(AGENT)

@@ -1,7 +1,6 @@
 # Databricks notebook source
-# MAGIC %pip install databricks-langchain uv langgraph==0.3.4
-# MAGIC %pip install mlflow==3.1.0rc0 databricks-agents==1.0.0rc2
-# MAGIC dbutils.library.restartPython()
+# MAGIC %pip install databricks-vectorsearch databricks-agents==1.8.2 mlflow==3.6.0 backoff uv
+# MAGIC %restart_python
 
 # COMMAND ----------
 
@@ -25,21 +24,6 @@ MODEL_NAME = config.get("model_name")
 
 # COMMAND ----------
 
-import os
-
-os.environ["DATABRICKS_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
-os.environ["DATABRICKS_TOKEN"] = dbutils.secrets.get("mlflow_dais2025", "pat")
-
-env_vars = {
-    env_var: os.environ[env_var]
-    for env_var in [
-        "DATABRICKS_TOKEN",
-        "DATABRICKS_HOST",
-    ]
-}
-
-# COMMAND ----------
-
 from utils import get_latest_model_version
 from databricks import agents
 
@@ -48,7 +32,6 @@ model_version = get_latest_model_version(f"{CATALOG}.{SCHEMA}.{MODEL_NAME}")
 agents.deploy(
     model_name=f"{CATALOG}.{SCHEMA}.{MODEL_NAME}",
     model_version=model_version,
-    environment_vars=env_vars,
 )
 
 # COMMAND ----------
